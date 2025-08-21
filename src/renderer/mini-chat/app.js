@@ -37,21 +37,33 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;');
 }
 function processAssistantMessage(text) {
-    let html = escapeHtml(text);
-    // code blocks
-    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    // process code blocks
+    let html = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
         const codeEsc = escapeHtml(code);
         const langClass = lang ? ` class="lang-${lang}"` : '';
         return `<div class="code-block"><button class="copy-btn">Copy</button><pre><code${langClass}>${codeEsc}</code></pre></div>`;
     });
-    // thinking collapsible
-    html = html.replace(/&lt;thinking&gt;([\s\S]*?)&lt;\/thinking&gt;/g, (_, inner) => {
+
+    // process thinking collapsible
+    html = html.replace(/<thinking>([\s\S]*?)<\/thinking>/g, (_, inner) => {
         const innerEsc = escapeHtml(inner.trim());
         return `<details class="thinking"><summary>Thinking</summary><pre><code>${innerEsc}</code></pre></details>`;
     });
-    // line breaks
-    html = html.replace(/\r\n|\r|\n/g, '<br>');
+
+    // line breaks: sostituire solo i \n fuori dai blocchi <pre><code>
+    html = html.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
     return html;
+}
+
+// escapeHtml solo per i contenuti dei blocchi
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 function attachCopyButtons(container) {
     container.querySelectorAll('.copy-btn').forEach(btn => {

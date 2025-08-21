@@ -63,7 +63,7 @@ function createPopupWindow(): BrowserWindow {
   if (popupWindow) return popupWindow;
 
   popupWindow = new BrowserWindow({
-    width: 420,
+    width: 500,
     height: 560,
     minWidth: 360,
     minHeight: 420,
