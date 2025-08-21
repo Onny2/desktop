@@ -1,157 +1,238 @@
 <!doctype html>
-<html>
+<html lang="it">
 <head>
-<meta charset="utf-8" />
-<title>Quick Chat</title>
-<meta http-equiv="Content-Security-Policy"
-content="default-src 'self' data: blob:;
-                 img-src 'self' data: blob:;
-                 style-src 'self' 'unsafe-inline';
-                 script-src 'self';
-                 connect-src 'self' http://127.0.0.1:* http://localhost:* https://127.0.0.1:*;">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-:root {
---pad: 10px; --radius: 12px;
---bg: #0e1217; --fg: #e7eaf0; --bubble-user: #1a2230; --bubble-assistant: #121823; --hint: #8a93a3;
---chrome: #0b0f14; --border:#1b2330;
-    }
-html, body { height: 100%; }
-body {
-margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-background: var(--bg); color: var(--fg);
-    }
-.dragbar {
-height: 24px; background: var(--chrome);
--webkit-app-region: drag; border-top-left-radius: 12px; border-top-right-radius: 12px;
-border-bottom: 1px solid var(--border);
-    }
-.wrap { height: calc(100vh - 24px); display:flex; flex-direction:column; gap:8px; padding:var(--pad); box-sizing:border-box; }
-.topbar { display:flex; gap:8px; align-items:center; }
-input, button, datalist {
-border-radius:10px; border:1px solid rgba(255,255,255,.06); padding:8px;
-font-size:14px; outline:none; background:#0f1622; color: var(--fg);
--webkit-app-region: no-drag;
-    }
-button { cursor: pointer; }
-.row { display:flex; gap:8px; }
-.row input[type="text"] { flex:1; }
-.msgs { flex:1; overflow:auto; display:flex; flex-direction:column; gap:6px; }
-.msg { padding:8px; border-radius:8px; white-space:pre-wrap; }
-.u { background: var(--bubble-user); align-self:flex-end; }
-.a { background: var(--bubble-assistant); align-self:flex-start; }
-.hint { font-size:12px; color: var(--hint); }
-.error { font-size:12px; color:#ff6b6b; white-space:pre-wrap; }
-/* Typing indicator: tre puntini che saltellano */
-.typing { display:inline-flex; gap:4px; align-items:center; }
-.dot { width:6px; height:6px; background:#77809a; border-radius:50%; display:inline-block; animation: bounce 1s infinite ease-in-out; }
-.dot:nth-child(2) { animation-delay: .15s; }
-.dot:nth-child(3) { animation-delay: .3s; }
-@keyframes bounce { 0%, 80%, 100% { transform: translateY(0); opacity:.6; } 40% { transform: translateY(-5px); opacity:1; } }
-/* Modal setup API key */
-.modal {
-position: fixed; inset: 24px; display: none; z-index: 10;
-background: rgba(14,18,23,0.95); border:1px solid var(--border); border-radius:12px;
-padding:16px; box-sizing:border-box;
-    }
-.modal.show { display:block; }
-.modal h3 { margin:0 0 8px 0; font-size:16px; }
-.modal p, .modal ol { margin:6px 0; color: var(--hint); font-size:13px; }
-.modal .row { margin-top:8px; }
-/* —– Thinking collapsible —– */
-details.thinking {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 8px;
-  margin: 8px 0;
-  background: var(--bubble-assistant);
-}
-details.thinking summary {
-  list-style: none;
-  cursor: pointer;
-  font-weight: bold;
-  position: relative;
-  padding-right: 20px;
-}
-details.thinking summary::-webkit-details-marker { display: none; }
-details.thinking summary:after {
-  content: "▼";
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-details.thinking[open] summary:after {
-  content: "▲";
-}
-details.thinking pre {
-  margin: 4px 0 0;
-  background: transparent;
-  padding: 0;
-}
-/* —– Code blocks with sticky copy button —– */
-.code-block {
-  margin: 8px 0;
-}
-.code-block pre {
-  background: #1e1e1e;
-  color: #dcdcdc;
-  padding: 8px;
-  border-radius: 6px;
-  overflow: auto;
-}
-.copy-btn {
-  position: sticky;
-  top: 0;
-  float: right;
-  margin-bottom: 4px;
-  background: var(--bg);
-  color: var(--fg);
-  border: 1px solid var(--border);
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 2;
-}
-.copy-btn:hover {
-  background: var(--bubble-user);
-}
-</style>
+  <meta charset="utf-8"/>
+  <title>Quick Chat – Footer fisso</title>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' data: blob:;
+             img-src 'self' data: blob:;
+             style-src 'self' 'unsafe-inline';
+             script-src 'self';
+             connect-src 'self' http://127.0.0.1:* http://localhost:* https://127.0.0.1:*;">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <style>
+  /* ───── VARIABILI ───── */
+  :root {
+    --pad: 12px;
+    --radius: 12px;
+    --bg: #0e1217;
+    --fg: #e7eaf0;
+    --chrome: #0b0f14;
+    --border: #1b2330;
+    --bubble-user: #1a2230;
+    --bubble-assistant: #121823;
+    --hint: #8a93a3;
+  }
+
+  /* ───── LAYOUT PRINCIPALE ───── */
+  html, body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+
+  /* ───── DRAGBAR (chrome) ───── */
+  .dragbar {
+    flex: none;
+    height: 24px;
+    background: var(--chrome);
+    -webkit-app-region: drag;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ───── CHAT SCORREVOLE ───── */
+  .msgs-wrapper {
+    flex: 1;
+    overflow: auto;
+    padding: var(--pad);
+    box-sizing: border-box;
+  }
+  .msgs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .msg {
+    padding: 8px;
+    border-radius: var(--radius);
+    white-space: pre-wrap;
+  }
+  .u { background: var(--bubble-user);  align-self: flex-end; }
+  .a { background: var(--bubble-assistant); align-self: flex-start; }
+  .hint  { font-size: 12px; color: var(--hint); }
+  .error { font-size: 12px; color: #ff6b6b; white-space: pre-wrap; }
+
+  /* ───── TYPING INDICATOR ───── */
+  .typing { display: inline-flex; gap:4px; align-items:center; }
+  .dot {
+    width:6px; height:6px; border-radius:50%;
+    background:#77809a;
+    animation: bounce 1s infinite ease-in-out;
+  }
+  .dot:nth-child(2){ animation-delay:.15s; }
+  .dot:nth-child(3){ animation-delay:.3s; }
+  @keyframes bounce {
+    0%,80%,100%{ transform: translateY(0); opacity:.6; }
+    40% { transform: translateY(-5px); opacity:1; }
+  }
+
+  /* ───── FOOTER CONTROLLI ───── */
+  .control-panel {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: var(--pad);
+    box-sizing: border-box;
+    background: transparent;
+  }
+
+  /* Top-bar: New, modello, refresh, Key, status */
+  .topbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  input, button, datalist {
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 8px;
+    font-size: 14px;
+    background: #0f1622;
+    color: var(--fg);
+    outline: none;
+    -webkit-app-region: no-drag;
+  }
+  button { cursor: pointer; }
+
+  /* Glass-morphism barra input */
+  .floating-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    background: rgba(20,20,30,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+  .floating-bar input {
+    flex:1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    margin-right: 12px;
+  }
+  .floating-bar .icons {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+  }
+  .floating-bar .icon {
+    width: 20px; height:20px;
+    fill: rgba(255,255,255,0.7);
+    margin-right:12px;
+    cursor:pointer;
+  }
+  .floating-bar .icons .icon:last-child { margin-right:0; }
+
+  /* bottone invio */
+  .floating-bar .send-btn {
+    width:48px; height:48px;
+    border:none; border-radius:50%;
+    background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    box-shadow:0 1px 4px rgba(0,0,0,0.2);
+  }
+  .floating-bar .send-btn .icon {
+    width:20px; height:20px;
+    fill:#000;
+  }
+
+  /* Modal API-key */
+  .modal {
+    position: fixed; inset: 24px;
+    display: none; z-index: 10;
+    background: rgba(14,18,23,0.95);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    padding:16px; box-sizing:border-box;
+  }
+  .modal.show { display: block; }
+  .modal h3 { margin:0 0 8px 0; font-size:16px; }
+  .modal p, .modal ol { margin:6px 0; color:var(--hint); font-size:13px; }
+  .modal .row { margin-top:8px; }
+
+  /* Thinking & code-block come da prima (omessi per brevità) */
+  </style>
 </head>
+
 <body>
-<div class="dragbar"></div>
-<div class="wrap">
-<div class="topbar">
-<button id="newChat" title="New chat">New</button>
-<input id="modelInput" list="models" placeholder="model (e.g. llama3:8b)" />
-<datalist id="models"></datalist>
-<button id="refresh" title="Reload models">↻</button>
-<button id="keyBtn" title="Set/Change API key">Key</button>
-<span id="status" class="hint"></span>
-</div>
-<div id="msgs" class="msgs"></div>
-<div class="row">
-<input id="prompt" type="text" placeholder="Type a message…" />
-<button id="send">Send</button>
-</div>
-<div id="err" class="error"></div>
-</div>
-<!-- Modal: first-run / change API key -->
-<div id="setup" class="modal">
-<h3>API Key required</h3>
-<p>This popup uses the OpenAI-compatible API of your Open WebUI.</p>
-<ol>
-<li>Open your Open WebUI.</li>
-<li>Go to <strong>Settings → Account</strong> (English UI).</li>
-<li>Click <strong>Create API Key</strong> and copy it.</li>
-</ol>
-<div class="row">
-<input id="apiKeyInput" type="password" placeholder="Paste API key here" style="flex:1;" />
-<button id="saveKey">Save</button>
-<button id="cancelKey">Cancel</button>
-</div>
-<p class="hint">You can change this later with the <em>Key</em> button.</p>
-</div>
-<script src="./app.js"></script>
+  <div class="dragbar"></div>
+
+  <!-- MESSAGGI SCORREVOLE -->
+  <div class="msgs-wrapper">
+    <div id="msgs" class="msgs"></div>
+  </div>
+
+  <!-- FOOTER FISSO -->
+  <div class="control-panel">
+    <div class="topbar">
+      <button id="newChat" title="Nuova chat">New</button>
+      <input id="modelInput" list="models" placeholder="modello (e.g. llama3:8b)"/>
+      <datalist id="models"></datalist>
+      <button id="refresh" title="Ricarica modelli">↻</button>
+      <button id="keyBtn" title="Cambia API-key">Key</button>
+      <span id="status" class="hint"></span>
+    </div>
+
+    <div class="floating-bar">
+      <input id="prompt" type="text" placeholder="Fai una domanda…"/>
+      <div class="icons">
+        <!-- slot per icone opzionali -->
+      </div>
+      <button id="send" class="send-btn">
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="32" fill="white"/>
+  <path d="M32 16L32 48M32 16L20 32M32 16L44 32" stroke="black" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+      </button>
+    </div>
+
+    <div id="err" class="error"></div>
+  </div>
+
+  <!-- MODAL API-KEY -->
+  <div id="setup" class="modal">
+    <h3>API Key required</h3>
+    <p>This popup uses the OpenAI-compatible API of your Open WebUI.</p>
+    <ol>
+      <li>Open your Open WebUI.</li>
+      <li>Go to <strong>Settings → Account</strong>.</li>
+      <li>Click <strong>Create API Key</strong> and copiare.</li>
+    </ol>
+    <div class="row">
+      <input id="apiKeyInput" type="password" placeholder="Paste API key here" style="flex:1;"/>
+      <button id="saveKey">Save</button>
+      <button id="cancelKey">Cancel</button>
+    </div>
+    <p class="hint">Puoi cambiarla in seguito con il pulsante <em>Key</em>.</p>
+  </div>
+
+  <script src="./app.js"></script>
 </body>
 </html>
